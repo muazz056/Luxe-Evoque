@@ -39,7 +39,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({ theme, toggleTheme, setTheme, mounted }),
-    [theme, mounted]
+    [theme, toggleTheme, mounted]
   );
 
   return (

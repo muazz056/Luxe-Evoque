@@ -128,7 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to save users to localStorage:', error);
     }
-  }, [userDatabase]);
+  }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
     // Simulate API delay

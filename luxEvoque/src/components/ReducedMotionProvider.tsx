@@ -42,7 +42,7 @@ export function ReducedMotionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({ reducedMotion, toggleReducedMotion, setReducedMotion }),
-    [reducedMotion]
+    [reducedMotion, toggleReducedMotion]
   );
 
   return (
