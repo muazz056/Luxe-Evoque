@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
+import { useReducedMotion } from './ReducedMotionProvider';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { NAV_ITEMS } from '@/lib/constants';
@@ -11,38 +11,18 @@ import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 
 export default function Navigation() {
-  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-
+  
   const { theme, toggleTheme } = useTheme();
+  const { reducedMotion, toggleReducedMotion } = useReducedMotion();
   const { getCartItemCount } = useCart();
   const { isAuthenticated, user, logout } = useAuth();
 
   const cartItemCount = getCartItemCount();
-
-  // Handle scroll on page load if there's a hash in URL
-  useEffect(() => {
-    const handleHashNavigation = () => {
-      if (window.location.hash && (window.location.pathname === '/' || window.location.pathname === '')) {
-        const hash = window.location.hash;
-        setTimeout(() => {
-          const element = document.querySelector(hash);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 100);
-      }
-    };
-
-    handleHashNavigation();
-    window.addEventListener('popstate', handleHashNavigation);
-
-    return () => window.removeEventListener('popstate', handleHashNavigation);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,18 +46,9 @@ export default function Navigation() {
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
-
-    if (href.startsWith('#')) {
-      const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-
-      if (isHomePage) {
-        const element = document.querySelector(href);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      } else {
-        router.push(`/${href}`);
-      }
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
     }
   };
 
@@ -117,14 +88,16 @@ export default function Navigation() {
               className="flex items-center gap-2 transition-all hover:opacity-80"
             >
               <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
-                <img 
-                  src="/assets/images/logo.png" 
-                  alt="Luxe Evoque Logo"
-                  className="w-full h-full object-contain"
-                />
+                <svg 
+                  viewBox="0 0 100 100" 
+                  className="w-full h-full text-gold"
+                  fill="currentColor"
+                >
+                  <path d="M50 10 L60 40 L90 40 L65 60 L75 90 L50 72 L25 90 L35 60 L10 40 L40 40 Z" />
+                </svg>
               </div>
               <span className="font-serif text-xl md:text-2xl font-bold text-text-primary">
-                Luxe Evoque
+                Luxe Perfumes
               </span>
             </a>
 
@@ -141,7 +114,7 @@ export default function Navigation() {
                   className={`font-medium transition-all duration-300 ${
                     item.isPrimary
                       ? 'bg-gold text-bgPrimary py-1.5 px-3 lg:py-2 lg:px-4 xl:py-2.5 xl:px-5 rounded-full font-semibold uppercase text-[10px] lg:text-xs xl:text-sm tracking-wide hover:bg-gold-hover hover:shadow-glow hover:-translate-y-0.5 shadow-md whitespace-nowrap'
-                      : 'text-xs lg:text-sm font-bold text-text-primary hover:text-gold whitespace-nowrap'
+                      : 'text-xs lg:text-sm text-text-muted/70 hover:text-text-primary whitespace-nowrap'
                   }`}
                 >
                   {item.label}
@@ -167,12 +140,12 @@ export default function Navigation() {
               {/* Auth Section */}
               {isAuthenticated && user ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs lg:text-sm font-bold text-text-primary hidden lg:block">
+                  <span className="text-xs lg:text-sm text-text-muted/70 hidden lg:block">
                     Hi, {user.fullName.split(' ')[0]}
                   </span>
                   <button
                     onClick={handleLogout}
-                    className="text-xs lg:text-sm font-bold text-text-primary hover:text-gold transition-colors"
+                    className="text-xs lg:text-sm text-text-muted/70 hover:text-gold transition-colors"
                   >
                     Logout
                   </button>
@@ -180,7 +153,7 @@ export default function Navigation() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="text-xs lg:text-sm font-bold text-text-primary hover:text-gold transition-colors"
+                  className="text-xs lg:text-sm text-text-muted/70 hover:text-gold transition-colors"
                 >
                   Sign In
                 </button>
@@ -202,6 +175,29 @@ export default function Navigation() {
                   </svg>
                 )}
               </button>
+
+              {/* Animation Toggle */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-text-muted/70 hidden lg:block">
+                  Animations
+                </span>
+                <button
+                  onClick={toggleReducedMotion}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    reducedMotion 
+                      ? 'bg-bgCard' 
+                      : 'bg-gold'
+                  }`}
+                  aria-label={`${reducedMotion ? 'Enable' : 'Disable'} hero animations`}
+                  title={reducedMotion ? 'Enable hero scroll animation' : 'Disable hero scroll animation'}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-text-primary transition-transform ${
+                      reducedMotion ? 'translate-x-1' : 'translate-x-6'
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
 
             {/* Mobile: Cart + Auth + Menu */}
@@ -280,7 +276,7 @@ export default function Navigation() {
                   className={`block py-3 px-4 rounded-xl text-center font-medium transition-colors ${
                     item.isPrimary
                       ? 'bg-gold text-bgPrimary shadow-soft'
-                      : 'font-bold text-text-primary hover:bg-bgPrimary/10'
+                      : 'text-text-muted/70 hover:bg-bgPrimary/10'
                   }`}
                 >
                   {item.label}
@@ -291,13 +287,13 @@ export default function Navigation() {
               <div className="pt-2 border-t border-border">
                 {isAuthenticated && user ? (
                   <>
-                    <div className="py-3 px-4 text-center text-sm text-text-primary">
+                    <div className="py-3 px-4 text-center text-sm text-text-muted/70">
                       Logged in as:<br />
-                      <span className="font-bold">{user.fullName}</span>
+                      <span className="font-semibold">{user.fullName}</span>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="w-full py-3 px-4 rounded-xl text-center font-bold text-red-400 hover:bg-red-500/10 transition-colors"
+                      className="w-full py-3 px-4 rounded-xl text-center font-medium text-red-400 hover:bg-red-500/10 transition-colors"
                     >
                       Logout
                     </button>
@@ -306,13 +302,13 @@ export default function Navigation() {
                   <>
                     <button
                       onClick={handleLogin}
-                      className="w-full py-3 px-4 rounded-xl text-center font-bold text-text-primary hover:bg-bgPrimary/10"
+                      className="w-full py-3 px-4 rounded-xl text-center font-medium text-text-muted/70 hover:bg-bgPrimary/10"
                     >
                       Sign In
                     </button>
                     <button
                       onClick={handleSignup}
-                      className="w-full py-3 px-4 rounded-xl text-center font-bold bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
+                      className="w-full py-3 px-4 rounded-xl text-center font-medium bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
                     >
                       Create Account
                     </button>
@@ -333,16 +329,37 @@ export default function Navigation() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                       </svg>
                       <span className="text-sm text-text-primary">Dark Mode</span>
-                    </>
+                    </> 
                   ) : (
                     <>
                       <svg className="w-5 h-5 text-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                       </svg>
                       <span className="text-sm text-text-primary">Light Mode</span>
-                    </>
+                    </> 
                   )}
                 </button>
+
+                <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-bgPrimary/5">
+                  <span className="text-sm font-medium text-text-muted/70">
+                    Animations
+                  </span>
+                  <button
+                    onClick={toggleReducedMotion}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      reducedMotion 
+                        ? 'bg-bgCard' 
+                        : 'bg-gold'
+                    }`}
+                    aria-label={`${reducedMotion ? 'Enable' : 'Disable'} hero animations`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-text-primary transition-transform ${
+                        reducedMotion ? 'translate-x-1' : 'translate-x-6'
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
