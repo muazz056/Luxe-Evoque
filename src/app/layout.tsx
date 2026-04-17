@@ -20,31 +20,31 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Nabia's Eatry | Freshly Baked. Perfectly Crafted.",
-  description: 'Discover our handcrafted premium cupcakes, cookies, and signature kunafa chocolate bars. Made with fresh ingredients and baked with love.',
-  keywords: ['bakery', 'cupcakes', 'cookies', 'kunafa', 'chocolate', 'premium desserts', 'handcrafted', "nabia's eatry"],
-  authors: [{ name: "Nabia's Eatry" }],
-  creator: "Nabia's Eatry",
+  title: "Luxe Evoke | Premium Perfumes",
+  description: 'Discover our curated collection of luxury fragrances. From elegant floral scents to bold oud perfumes, find your perfect signature scent.',
+  keywords: ['perfume', 'fragrance', 'luxury perfume', 'designer scents', 'oud', 'eau de parfum', 'signature scent'],
+  authors: [{ name: "Luxe Evoke" }],
+  creator: "Luxe Evoke",
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://your-bakery.com',
-    siteName: "Nabia's Eatry",
-    title: "Nabia's Eatry | Freshly Baked. Perfectly Crafted.",
-    description: 'Discover our handcrafted premium cupcakes, cookies, and signature kunafa chocolate bars.',
+    url: 'https://luxe-evoke.com',
+    siteName: "Luxe Evoke",
+    title: "Luxe Evoke | Premium Perfumes",
+    description: 'Discover our curated collection of luxury fragrances.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "Nabia's Eatry - Freshly Baked Desserts",
+        alt: "Luxe Evoke - Premium Fragrances",
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Nabia's Eatry | Freshly Baked. Perfectly Crafted.",
-    description: 'Discover our handcrafted premium cupcakes, cookies, and signature kunafa chocolate bars.',
+    title: "Luxe Evoke | Premium Perfumes",
+    description: 'Discover our curated collection of luxury fragrances.',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -62,8 +62,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FEF9E7' },
-    { media: '(prefers-color-scheme: dark)', color: '#1A1107' },
+    { media: '(prefers-color-scheme: light)', color: '#FAF8F5' },
+    { media: '(prefers-color-scheme: dark)', color: '#0D0B0A' },
   ],
   width: 'device-width',
   initialScale: 1,
