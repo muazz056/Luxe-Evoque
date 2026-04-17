@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C6A96B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C6A96B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F0F0F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E1E1E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect fill="url(#bg-gradient)" width="400" height="400"/>
+  
+  <!-- Elegant perfume bottle silhouette -->
+  <g transform="translate(200, 200)">
+    <!-- Bottle body -->
+    <rect x="-35" y="-80" width="70" height="120" rx="8" fill="none" stroke="url(#gold-gradient)" stroke-width="2"/>
+    
+    <!-- Bottle neck -->
+    <rect x="-12" y="-100" width="24" height="25" fill="none" stroke="url(#gold-gradient)" stroke-width="2"/>
+    
+    <!-- Bottle cap -->
+    <rect x="-18" y="-115" width="36" height="18" rx="4" fill="url(#gold-gradient)"/>
+    
+    <!-- Label area -->
+    <rect x="-30" y="-40" width="60" height="40" rx="2" fill="none" stroke="url(#gold-gradient)" stroke-width="1" opacity="0.6"/>
+    
+    <!-- Decorative line -->
+    <line x1="-25" y1="0" x2="25" y2="0" stroke="url(#gold-gradient)" stroke-width="1"/>
+    
+    <!-- Small decorative element at bottom -->
+    <circle cx="0" cy="95" r="4" fill="url(#gold-gradient)" opacity="0.8"/>
+  </g>
+  
+  <!-- Brand name placeholder -->
+  <text x="200" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#C6A96B" opacity="0.7">
+    LUXE perfume
+  </text>
+  
+  <!-- Elegant border -->
+  <rect x="10" y="10" width="380" height="380" rx="20" fill="none" stroke="url(#gold-gradient)" stroke-width="1" opacity="0.3"/>
+</svg>
