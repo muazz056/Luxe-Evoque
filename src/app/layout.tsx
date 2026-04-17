@@ -20,30 +20,30 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Luxe Evoke | Premium Perfumes",
+  title: "Luxe Evoque | Premium Perfumes",
   description: 'Discover our curated collection of luxury fragrances. From elegant floral scents to bold oud perfumes, find your perfect signature scent.',
   keywords: ['perfume', 'fragrance', 'luxury perfume', 'designer scents', 'oud', 'eau de parfum', 'signature scent'],
-  authors: [{ name: "Luxe Evoke" }],
-  creator: "Luxe Evoke",
+  authors: [{ name: "Luxe Evoque" }],
+  creator: "Luxe Evoque",
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://luxe-evoke.com',
-    siteName: "Luxe Evoke",
-    title: "Luxe Evoke | Premium Perfumes",
+    url: 'https://luxe-evoque.com',
+    siteName: "Luxe Evoque",
+    title: "Luxe Evoque | Premium Perfumes",
     description: 'Discover our curated collection of luxury fragrances.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "Luxe Evoke - Premium Fragrances",
+        alt: "Luxe Evoque - Premium Fragrances",
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Luxe Evoke | Premium Perfumes",
+    title: "Luxe Evoque | Premium Perfumes",
     description: 'Discover our curated collection of luxury fragrances.',
     images: ['/og-image.jpg'],
   },
