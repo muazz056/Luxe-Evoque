@@ -79,12 +79,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
       <head>
         {/* Preload critical assets */}
-        <link
+        {/* <link
           rel="preload"
           href="/assets/animations/ezgif-frame-001.jpg"
           as="image"
           type="image/jpeg"
-        />
+        /> */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>

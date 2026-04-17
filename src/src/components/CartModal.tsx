@@ -98,7 +98,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                     {/* Product Image */}
                     <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden bg-bgCard">
                       <img
-                        src={item.product.image}
+                        src={item.product.images[0]}
                         alt={item.product.name}
                         className="w-full h-full object-cover"
                       />

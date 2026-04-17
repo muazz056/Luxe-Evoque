@@ -90,7 +90,7 @@ export function useFrameAnimation({
       return new Promise((resolve, reject) => {
         const img = new Image();
         const frameNum = String(index + 1).padStart(3, '0');
-        img.src = `/assets/animations/ezgif-frame-${frameNum}.jpg`;
+        // img.src = `/assets/animations/ezgif-frame-${frameNum}.jpg`;
         
         img.onload = () => {
           loaded++;
