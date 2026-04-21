@@ -27,18 +27,16 @@ export default function Navigation() {
   }, []);
 
   const handleNavClick = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      if (window.location.pathname !== '/') {
-        router.push('/');
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
+    setIsMobileMenuOpen(false);
+    
+    // Always navigate to home first, then scroll
+    router.push('/');
+    setTimeout(() => {
+      const element = document.querySelector(href);
+      if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
-    }
-    setIsMobileMenuOpen(false);
+    }, 300);
   };
 
   const handleLogin = () => router.push('/auth');
