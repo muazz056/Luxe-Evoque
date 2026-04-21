@@ -21,8 +21,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setMounted(true);
     // Check for saved theme preference or system preference
     const savedTheme = localStorage.getItem('theme') as Theme | null;
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const initialTheme = savedTheme || systemTheme;
+    // Default to light mode
+    const initialTheme = savedTheme || 'light';
     setThemeState(initialTheme);
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
   }, []);

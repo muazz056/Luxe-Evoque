@@ -12,8 +12,9 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-end">
-      <div className="absolute inset-0 bg-bgPrimary/80 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md h-full bg-bgCard shadow-2xl transform transition-transform duration-300 ease-out">
+      <div className="absolute inset-0 backdrop-blur-sm" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} onClick={onClose} />
+      <div className="relative w-full max-w-md h-full shadow-2xl transform transition-transform duration-300 ease-out"
+        style={{ backgroundColor: 'var(--bg-card)' }}>
         <CartContent onClose={onClose} />
       </div>
     </div>
