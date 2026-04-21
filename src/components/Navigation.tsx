@@ -29,7 +29,14 @@ export default function Navigation() {
   const handleNavClick = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      if (window.location.pathname !== '/') {
+        router.push('/');
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setIsMobileMenuOpen(false);
   };
@@ -58,7 +65,7 @@ export default function Navigation() {
         <div className="container-custom">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="#hero" onClick={(e) => { e.preventDefault(); handleNavClick('#hero'); }}
+            <a href="/" onClick={(e) => { e.preventDefault(); router.push('/'); setIsMobileMenuOpen(false); }}
               className="flex items-center gap-2 transition-opacity hover:opacity-80">
               <div className="w-10 h-10 md:w-12 md:h-12">
                 <img src="/assets/images/logo.png" alt="Luxe Evoque" className="w-full h-full object-contain" />
