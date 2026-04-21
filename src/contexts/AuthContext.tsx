@@ -37,36 +37,16 @@ const AUTH_STORAGE_KEY = 'perfume-store-auth';
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case 'SET_USER':
-      return {
-        user: action.payload,
-        isAuthenticated: true,
-        sessionToken: `token-${Date.now()}`,
-      };
-
+      return { user: action.payload, isAuthenticated: true, sessionToken: `token-${Date.now()}` };
     case 'SET_SESSION':
-      return {
-        user: action.payload.user,
-        isAuthenticated: true,
-        sessionToken: action.payload.token,
-      };
-
+      return { user: action.payload.user, isAuthenticated: true, sessionToken: action.payload.token };
     case 'LOGOUT':
-      return {
-        user: null,
-        isAuthenticated: false,
-        sessionToken: null,
-      };
-
+      return { user: null, isAuthenticated: false, sessionToken: null };
     case 'UPDATE_USER':
       if (!state.user) return state;
-      return {
-        ...state,
-        user: { ...state.user, ...action.payload, updatedAt: new Date().toISOString() },
-      };
-
+      return { ...state, user: { ...state.user, ...action.payload, updatedAt: new Date().toISOString() } };
     case 'LOAD_AUTH':
       return action.payload;
-
     default:
       return state;
   }
@@ -79,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sessionToken: null,
   });
 
-  // Load auth state from localStorage on mount
   useEffect(() => {
     try {
       const savedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
@@ -94,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save auth state to localStorage whenever it changes
   useEffect(() => {
     try {
       if (authState.isAuthenticated && authState.user) {
@@ -109,68 +87,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
     try {
-      // Sign in with Supabase Auth
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.toLowerCase(),
         password,
       });
 
-      if (error) {
-        return { success: false, message: error.message };
-      }
+      if (error) return { success: false, message: error.message };
 
       if (data.user) {
-        // Fetch user profile from profiles table
-        const { data: profile, error: profileError } = await supabase
+        const { data: profile } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', data.user.id)
           .single();
 
-        if (profileError && profileError.code !== 'PGRST116') {
-          console.error('Error fetching profile:', profileError);
-        }
-
         const user: User = {
           id: data.user.id,
           email: data.user.email || email.toLowerCase(),
-          fullName: profile?.fullName || data.user.user_metadata?.fullName || '',
+          fullName: profile?.full_name || data.user.user_metadata?.fullName || '',
           phone: profile?.phone || '',
           address: profile?.address || '',
           city: profile?.city || '',
           country: profile?.country || '',
-          postalCode: profile?.postalCode || '',
-          preferredFragranceTypes: profile?.preferredFragranceTypes || [],
-          createdAt: profile?.createdAt || new Date().toISOString(),
-          updatedAt: profile?.updatedAt || new Date().toISOString(),
+          postalCode: profile?.postal_code || '',
+          preferredFragranceTypes: profile?.preferred_fragrance_types || [],
+          createdAt: profile?.created_at || new Date().toISOString(),
+          updatedAt: profile?.updated_at || new Date().toISOString(),
         };
 
-        dispatch({
-          type: 'SET_SESSION',
-          payload: { user, token: data.session?.access_token || '' }
-        });
-
+        dispatch({ type: 'SET_SESSION', payload: { user, token: data.session?.access_token || '' } });
         return { success: true, message: 'Login successful!' };
       }
-
       return { success: false, message: 'Invalid credentials' };
     } catch (error: any) {
-      console.error('Login error:', error);
       return { success: false, message: error.message || 'Login failed' };
     }
   };
 
   const signup = async (userData: SignupData): Promise<{ success: boolean; message: string }> => {
     try {
-      // Sign up with Supabase Auth
       const { data, error } = await supabase.auth.signUp({
         email: userData.email.toLowerCase(),
         password: userData.password,
-        options: {
-          data: {
-            fullName: userData.fullName,
-          }
-        }
+        options: { data: { fullName: userData.fullName } }
       });
 
       if (error) {
@@ -181,23 +140,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user) {
-        // Create user profile in profiles table
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: data.user.id,
-            fullName: userData.fullName,
-            email: userData.email.toLowerCase(),
-            phone: userData.phone,
-            address: userData.address,
-            city: userData.city,
-            country: userData.country,
-            postalCode: userData.postalCode,
-            preferredFragranceTypes: userData.preferredFragranceTypes,
-          });
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: data.user.id,
+          full_name: userData.fullName,
+          email: userData.email.toLowerCase(),
+          phone: userData.phone,
+          address: userData.address,
+          city: userData.city,
+          country: userData.country,
+          postal_code: userData.postalCode,
+          preferred_fragrance_types: userData.preferredFragranceTypes,
+        });
 
         if (profileError) {
-          console.error('Error creating profile:', profileError);
+          console.error('Profile error:', profileError);
         }
 
         const user: User = {
@@ -214,14 +170,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           updatedAt: new Date().toISOString(),
         };
 
-        dispatch({
-          type: 'SET_SESSION',
-          payload: { user, token: data.session?.access_token || '' }
-        });
-
+        dispatch({ type: 'SET_SESSION', payload: { user, token: data.session?.access_token || '' } });
         return { success: true, message: 'Account created successfully!' };
       }
-
       return { success: false, message: 'Signup failed' };
     } catch (error: any) {
       console.error('Signup error:', error);
@@ -241,33 +192,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateUser = (userData: Partial<User>) => {
     if (!authState.user) return;
 
-    // Update in Supabase
     supabase
       .from('profiles')
       .update({
-        ...userData,
-        updatedAt: new Date().toISOString(),
+        full_name: userData.fullName,
+        phone: userData.phone,
+        address: userData.address,
+        city: userData.city,
+        country: userData.country,
+        postal_code: userData.postalCode,
+        updated_at: new Date().toISOString(),
       })
       .eq('id', authState.user.id)
       .then(({ error }) => {
-        if (error) {
-          console.error('Error updating profile:', error);
-        }
+        if (error) console.error('Error updating profile:', error);
       });
 
     dispatch({ type: 'UPDATE_USER', payload: userData });
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        ...authState,
-        login,
-        signup,
-        logout,
-        updateUser,
-      }}
-    >
+    <AuthContext.Provider value={{ ...authState, login, signup, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
@@ -275,8 +220,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 }
