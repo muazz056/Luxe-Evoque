@@ -25,6 +25,10 @@ export const metadata: Metadata = {
   keywords: ['perfume', 'fragrance', 'luxury perfume', 'designer scents', 'oud', 'eau de parfum', 'signature scent'],
   authors: [{ name: "Luxe Evoque" }],
   creator: "Luxe Evoque",
+  icons: {
+    icon: '/assets/images/logo.png',
+    apple: '/assets/images/logo.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
