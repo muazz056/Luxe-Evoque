@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { Product, FragranceNote } from '@/types';
 import { useCart } from '@/contexts/CartContext';
+import { formatPrice } from '@/config/products';
 
 interface ProductModalProps {
   product: Product | null;
@@ -126,11 +127,11 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                   {/* Price & Basic Info */}
                   <div className="flex items-baseline gap-3 mb-6">
                     <span className="text-3xl font-bold text-gold">
-                      ${product.price}
+                      {formatPrice(product.price)}
                     </span>
                     {product.originalPrice && product.originalPrice > product.price && (
                       <span className="text-lg text-chocolate-400 line-through">
-                        ${product.originalPrice}
+                        {formatPrice(product.originalPrice)}
                       </span>
                     )}
                     <span className="text-sm text-chocolate-500 dark:text-cream-400">
@@ -209,7 +210,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    Add to Cart - ${(product.price * quantity).toLocaleString()}
+                    Add to Cart - {formatPrice(product.price * quantity)}
                   </button>
                 </div>
               </div>

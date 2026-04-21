@@ -50,7 +50,7 @@ export const PRODUCTS: Product[] = [
     categories: ['luxury', 'men'],
     subcategory: 'woody',
     price: 2200,
-    volume: '100ml',
+    volume: '50ml',
     concentration: 'Eau de Parfum',
     intensity: 'Strong',
     topNotes: [
@@ -215,7 +215,7 @@ export function getLimitedEdition(): Product[] {
 }
 
 export function formatPrice(price: number): string {
-  return `$${price.toFixed(0)}`;
+  return `Rs ${price.toLocaleString()}`;
 }
 
 export function calculateDiscount(original: number, current: number): number {

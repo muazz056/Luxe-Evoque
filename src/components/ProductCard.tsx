@@ -5,6 +5,7 @@ import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useProductModal } from './ProductModalContext';
+import { formatPrice } from '@/config/products';
 
 interface ProductCardProps {
   product: Product;
@@ -125,7 +126,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
               {product.name}
             </h3>
             <span className="text-lg font-bold text-gold flex-shrink-0">
-              ${product.price}
+              {formatPrice(product.price)}
             </span>
           </div>
           
