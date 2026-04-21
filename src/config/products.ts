@@ -10,7 +10,7 @@ export const PRODUCTS: Product[] = [
     images: [
       '/assets/images/GLORY - MEN.png',
     ],
-    categories: ['luxury', 'men', 'arabic', 'unisex'],
+    categories: ['luxury', 'men'],
     subcategory: 'oud',
     price: 250,
     originalPrice: 300,
@@ -47,7 +47,7 @@ export const PRODUCTS: Product[] = [
     images: [
       '/assets/images/AURA - MEN.png',
     ],
-    categories: ['luxury', 'men', 'arabic', 'unisex'],
+    categories: ['luxury', 'men'],
     subcategory: 'woody',
     price: 180,
     volume: '100ml',
@@ -119,7 +119,7 @@ export const PRODUCTS: Product[] = [
     images: [
       '/assets/images/ELA NORA - WOMEN.png',
     ],
-    categories: ['luxury', 'women', 'arabic', 'unisex'],
+    categories: ['luxury', 'women'],
     subcategory: 'oriental',
     price: 220,
     volume: '100ml',
@@ -154,7 +154,7 @@ export const PRODUCTS: Product[] = [
     images: [
       '/assets/images/ELOIRE - WOMEN.png',
     ],
-    categories: ['luxury', 'women', 'arabic', 'unisex'],
+    categories: ['luxury', 'women'],
     subcategory: 'woody',
     price: 160,
     volume: '100ml',
@@ -188,7 +188,7 @@ export function getProductById(id: string): Product | undefined {
 export function getProductsByCategory(category: string): Product[] {
   if (category === 'all') return PRODUCTS;
   if (category === 'arabic') {
-    return PRODUCTS.filter(p => p.categories.includes('arabic') || p.categories.includes('unisex'));
+    return PRODUCTS.filter(p => p.categories.includes('arabic'));
   }
   return PRODUCTS.filter(p => p.categories.includes(category as any));
 }

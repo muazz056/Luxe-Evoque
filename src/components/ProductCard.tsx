@@ -71,7 +71,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             ref={imgRef}
             src={imageError ? placeholderImage : product.images[0]}
             alt={product.name}
-            className={`w-full h-full object-cover transition-all duration-700 ${
+            className={`w-full h-full object-contain transition-all duration-700 ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             } group-hover:scale-110`}
             onLoad={() => setImageLoaded(true)}
