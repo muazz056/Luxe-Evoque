@@ -12,13 +12,22 @@ import Footer from '@/components/Footer';
 export default function CartPage() {
   const router = useRouter();
   const { cart, clearCart, updateQuantity, removeFromCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+
+  // Auto-fill user data when logged in
+  useEffect(() => {
+    if (user) {
+      setCustomerName(user.fullName || '');
+      setCustomerPhone(user.phone || '');
+      setDeliveryAddress(user.address || '');
+    }
+  }, [user]);
 
   // useEffect on mount - redirect to home if cart is empty and not showing checkout
   useEffect(() => {

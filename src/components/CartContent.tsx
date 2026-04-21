@@ -23,6 +23,15 @@ export default function CartContent({ onClose }: CartContentProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto-fill user data when logged in
+  useEffect(() => {
+    if (user) {
+      setCustomerName(user.fullName || '');
+      setCustomerPhone(user.phone || '');
+      setDeliveryAddress(user.address || '');
+    }
+  }, [user]);
+
   // when checkout form opens, scroll to bottom of the container so fields/order button are visible
   useEffect(() => {
     if (showCheckoutForm && scrollRef.current) {

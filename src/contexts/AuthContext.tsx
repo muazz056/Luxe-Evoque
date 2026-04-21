@@ -34,6 +34,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AUTH_STORAGE_KEY = 'perfume-store-auth';
 const USERS_STORAGE_KEY = 'perfume-store-users';
 
+function saveUsersToStorage() {
+  if (userDatabase.length > 0) {
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(userDatabase));
+  }
+}
+
 // Simulated user database (in real app, this would be server-side)
 let userDatabase: User[] = [];
 
@@ -121,14 +127,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [authState]);
 
-  // Save user database periodically
+  // Save user database when it changes
   useEffect(() => {
-    try {
+    if (userDatabase.length > 0) {
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(userDatabase));
-    } catch (error) {
-      console.error('Failed to save users to localStorage:', error);
     }
-  }, []);
+  }, [userDatabase.length]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
     // Simulate API delay
@@ -181,6 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Add to database
     userDatabase.push(newUser);
+    saveUsersToStorage();
 
     // Auto-login after signup
     const token = `token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -206,6 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const index = userDatabase.findIndex(u => u.id === authState.user?.id);
     if (index >= 0) {
       userDatabase[index] = updatedUser;
+      saveUsersToStorage();
     }
 
     dispatch({ type: 'UPDATE_USER', payload: userData });
