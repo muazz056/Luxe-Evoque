@@ -49,100 +49,98 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   return (
     <div
       ref={ref}
-      className={`group relative transition-all duration-700 cursor-pointer card ${
-        isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-10'
-      }`}
+      className="group relative transition-all duration-700 cursor-pointer"
       style={{
-        transitionDelay: `${index * 150}ms`,
+        transitionDelay: `${index * 100}ms`,
       }}
       onClick={handleCardClick}
     >
-      <div className="overflow-hidden rounded-3xl">
+      <div className="relative overflow-hidden rounded-2xl" style={{
+        background: 'rgba(26, 22, 20, 0.6)',
+        border: '1px solid rgba(198, 169, 107, 0.1)',
+      }}>
         {/* Image Container */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-transparent">
-          {/* Skeleton loader */}
-          {!imageLoaded && !imageError && (
-            <div className="absolute inset-0 skeleton rounded-t-3xl" />
-          )}
-
+        <div className="relative aspect-square overflow-hidden flex items-center justify-center p-6" style={{ background: 'transparent' }}>
           {/* Product Image */}
           <img
             ref={imgRef}
             src={imageError ? placeholderImage : product.images[0]}
             alt={product.name}
-            className={`w-full h-full object-contain transition-all duration-700 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            } group-hover:scale-110`}
+            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
             onLoad={() => setImageLoaded(true)}
             onError={() => {
               setImageError(true);
               setImageLoaded(true);
             }}
+            style={{ opacity: imageLoaded ? 1 : 0 }}
           />
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             {product.isBestseller && (
-              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gold text-bgPrimary rounded-full shadow-soft">
+              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full"
+                style={{ background: '#C6A96B', color: '#0D0B0A' }}>
                 Bestseller
               </span>
             )}
             {product.isNew && (
-              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-bgCard text-text-primary border border-border rounded-full">
+              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full"
+                style={{ background: 'rgba(198, 169, 107, 0.2)', color: '#C6A96B', border: '1px solid rgba(198, 169, 107, 0.3)' }}>
                 New
               </span>
             )}
             {product.isLimited && (
-              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-900 text-cream rounded-full">
-                Limited Edition
+              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full"
+                style={{ background: 'rgba(180, 120, 60, 0.2)', color: '#E5D3A5' }}>
+                Limited
               </span>
             )}
             {product.discount && product.discount > 0 && (
-              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500 text-white rounded-full">
+              <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full"
+                style={{ background: 'rgba(220, 38, 38, 0.8)', color: '#fff' }}>
                 -{product.discount}%
               </span>
             )}
           </div>
 
           {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-bgPrimary/90 via-bgPrimary/20 to-transparent transition-opacity duration-500 opacity-0 group-hover:opacity-100">
-            <div className="absolute bottom-4 left-4 right-4">
-              <button
-                onClick={handleAddToCart}
-                className="w-full py-3 bg-gold text-bgPrimary text-sm font-bold uppercase tracking-wider rounded-full shadow-soft hover:bg-gold-hover transition-all transform hover:-translate-y-0.5"
-              >
-                Add to Cart
-              </button>
-            </div>
+          <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+            style={{ background: 'rgba(13, 11, 10, 0.7)' }}>
+            <button
+              onClick={handleAddToCart}
+              className="px-8 py-3 font-semibold text-sm uppercase tracking-wider rounded-full transition-transform hover:scale-105"
+              style={{ 
+                background: 'linear-gradient(135deg, #C6A96B 0%, #B8956A 100%)',
+                color: '#0D0B0A',
+              }}
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 bg-bgCard border-t border-border">
+        <div className="p-4" style={{ borderTop: '1px solid rgba(198, 169, 107, 0.1)' }}>
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="heading-sm text-text-primary group-hover:text-gold transition-colors duration-300 line-clamp-1">
+            <h3 className="font-serif text-lg font-semibold transition-colors duration-300"
+              style={{ color: '#FAF8F5' }}>
               {product.name}
             </h3>
-            <span className="text-lg font-bold text-gold flex-shrink-0">
+            <span className="text-base font-bold" style={{ color: '#C6A96B' }}>
               {formatPrice(product.price)}
             </span>
           </div>
           
-          <p className="body-sm text-text-muted mb-4 line-clamp-2 leading-relaxed">
+          <p className="text-xs mb-4 line-clamp-2" style={{ color: 'rgba(250, 248, 245, 0.5)' }}>
             {product.shortDescription || product.description}
           </p>
           
-          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wider text-text-muted">
-            <span className="px-2 py-1 bg-bgPrimary/50 border border-border/50 rounded">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wider">
+            <span className="px-2 py-1 rounded" style={{ background: 'rgba(198, 169, 107, 0.1)', color: 'rgba(250, 248, 245, 0.6)' }}>
               {product.volume}
             </span>
-            <span className="px-2 py-1 bg-bgPrimary/50 border border-border/50 rounded">
+            <span className="px-2 py-1 rounded" style={{ background: 'rgba(198, 169, 107, 0.1)', color: 'rgba(250, 248, 245, 0.6)' }}>
               {product.concentration}
-            </span>
-            <span className="px-2 py-1 bg-bgPrimary/50 border border-border/50 rounded">
-              {product.intensity}
             </span>
           </div>
         </div>

@@ -148,6 +148,28 @@
     transform: translateY(0);
   }
   
+  .btn-gold {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-hover) 100%);
+    color: var(--bg-primary);
+    border-radius: 9999px;
+    transition: all 0.3s var(--transition-smooth);
+    box-shadow: 0 10px 40px -10px rgba(198, 169, 107, 0.3);
+  }
+  
+  .btn-gold:hover {
+    box-shadow: 0 15px 50px -10px rgba(198, 169, 107, 0.4);
+    transform: translateY(-2px);
+  }
+  
   .btn-secondary {
     position: relative;
     display: inline-flex;
