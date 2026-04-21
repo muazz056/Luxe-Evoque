@@ -1,12 +1,13 @@
 'use client';
 
 import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
 import type { User, AuthState, ScentProfile } from '@/types';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
   signup: (userData: SignupData) => Promise<{ success: boolean; message: string }>;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateUser: (userData: Partial<User>) => void;
 }
 
@@ -32,20 +33,6 @@ type AuthAction =
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AUTH_STORAGE_KEY = 'perfume-store-auth';
-const USERS_STORAGE_KEY = 'perfume-store-users';
-
-function saveUsersToStorage() {
-  if (userDatabase.length > 0) {
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(userDatabase));
-  }
-}
-
-// Simulated user database (in real app, this would be server-side)
-let userDatabase: User[] = [];
-
-function generateId(): string {
-  return `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
@@ -96,21 +83,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const savedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
-      const savedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-
-      if (savedUsers) {
-        userDatabase = JSON.parse(savedUsers);
-      }
-
       if (savedAuth) {
         const parsedAuth = JSON.parse(savedAuth);
-        // Verify token is still valid (simple check)
         if (parsedAuth.sessionToken && parsedAuth.user) {
           dispatch({ type: 'LOAD_AUTH', payload: parsedAuth });
         }
       }
     } catch (error) {
-      console.error('Failed to load auth from localStorage:', error);
+      console.error('Failed to load auth:', error);
     }
   }, []);
 
@@ -123,96 +103,157 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(AUTH_STORAGE_KEY);
       }
     } catch (error) {
-      console.error('Failed to save auth to localStorage:', error);
+      console.error('Failed to save auth:', error);
     }
   }, [authState]);
 
-  // Save user database when it changes
-  useEffect(() => {
-    if (userDatabase.length > 0) {
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(userDatabase));
-    }
-  }, [userDatabase.length]);
-
   const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      // Sign in with Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.toLowerCase(),
+        password,
+      });
 
-    // Find user in database
-    const user = userDatabase.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (error) {
+        return { success: false, message: error.message };
+      }
 
-    if (!user) {
-      return { success: false, message: 'No account found with this email. Please sign up first.' };
+      if (data.user) {
+        // Fetch user profile from profiles table
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+
+        if (profileError && profileError.code !== 'PGRST116') {
+          console.error('Error fetching profile:', profileError);
+        }
+
+        const user: User = {
+          id: data.user.id,
+          email: data.user.email || email.toLowerCase(),
+          fullName: profile?.fullName || data.user.user_metadata?.fullName || '',
+          phone: profile?.phone || '',
+          address: profile?.address || '',
+          city: profile?.city || '',
+          country: profile?.country || '',
+          postalCode: profile?.postalCode || '',
+          preferredFragranceTypes: profile?.preferredFragranceTypes || [],
+          createdAt: profile?.createdAt || new Date().toISOString(),
+          updatedAt: profile?.updatedAt || new Date().toISOString(),
+        };
+
+        dispatch({
+          type: 'SET_SESSION',
+          payload: { user, token: data.session?.access_token || '' }
+        });
+
+        return { success: true, message: 'Login successful!' };
+      }
+
+      return { success: false, message: 'Invalid credentials' };
+    } catch (error: any) {
+      console.error('Login error:', error);
+      return { success: false, message: error.message || 'Login failed' };
     }
-
-    // In a real app, we'd verify password hash. Here we just check it exists.
-    // For demo, any password works if user exists
-    const token = `token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-    dispatch({
-      type: 'SET_SESSION',
-      payload: { user, token }
-    });
-
-    return { success: true, message: 'Login successful!' };
   };
 
   const signup = async (userData: SignupData): Promise<{ success: boolean; message: string }> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      // Sign up with Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email.toLowerCase(),
+        password: userData.password,
+        options: {
+          data: {
+            fullName: userData.fullName,
+          }
+        }
+      });
 
-    // Check if email already exists
-    const existingUser = userDatabase.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
+      if (error) {
+        if (error.message.includes('already registered')) {
+          return { success: false, message: 'An account with this email already exists' };
+        }
+        return { success: false, message: error.message };
+      }
 
-    if (existingUser) {
-      return { success: false, message: 'An account with this email already exists. Please login instead.' };
+      if (data.user) {
+        // Create user profile in profiles table
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: data.user.id,
+            fullName: userData.fullName,
+            email: userData.email.toLowerCase(),
+            phone: userData.phone,
+            address: userData.address,
+            city: userData.city,
+            country: userData.country,
+            postalCode: userData.postalCode,
+            preferredFragranceTypes: userData.preferredFragranceTypes,
+          });
+
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+        }
+
+        const user: User = {
+          id: data.user.id,
+          email: userData.email.toLowerCase(),
+          fullName: userData.fullName,
+          phone: userData.phone,
+          address: userData.address,
+          city: userData.city,
+          country: userData.country,
+          postalCode: userData.postalCode,
+          preferredFragranceTypes: userData.preferredFragranceTypes,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        dispatch({
+          type: 'SET_SESSION',
+          payload: { user, token: data.session?.access_token || '' }
+        });
+
+        return { success: true, message: 'Account created successfully!' };
+      }
+
+      return { success: false, message: 'Signup failed' };
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      return { success: false, message: error.message || 'Signup failed' };
     }
-
-    // Create new user
-    const newUser: User = {
-      id: generateId(),
-      fullName: userData.fullName,
-      email: userData.email.toLowerCase(),
-      phone: userData.phone,
-      address: userData.address,
-      city: userData.city,
-      country: userData.country,
-      postalCode: userData.postalCode,
-      preferredFragranceTypes: userData.preferredFragranceTypes,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    // Add to database
-    userDatabase.push(newUser);
-    saveUsersToStorage();
-
-    // Auto-login after signup
-    const token = `token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-    dispatch({
-      type: 'SET_SESSION',
-      payload: { user: newUser, token }
-    });
-
-    return { success: true, message: 'Account created successfully!' };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     dispatch({ type: 'LOGOUT' });
   };
 
   const updateUser = (userData: Partial<User>) => {
     if (!authState.user) return;
 
-    const updatedUser = { ...authState.user, ...userData, updatedAt: new Date().toISOString() };
-
-    // Update in database
-    const index = userDatabase.findIndex(u => u.id === authState.user?.id);
-    if (index >= 0) {
-      userDatabase[index] = updatedUser;
-      saveUsersToStorage();
-    }
+    // Update in Supabase
+    supabase
+      .from('profiles')
+      .update({
+        ...userData,
+        updatedAt: new Date().toISOString(),
+      })
+      .eq('id', authState.user.id)
+      .then(({ error }) => {
+        if (error) {
+          console.error('Error updating profile:', error);
+        }
+      });
 
     dispatch({ type: 'UPDATE_USER', payload: userData });
   };
