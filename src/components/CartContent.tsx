@@ -93,6 +93,11 @@ export default function CartContent({ onClose }: CartContentProps) {
     }
   };
 
+  const handleGoToCartPage = () => {
+    if (onClose) onClose();
+    router.push('/cart');
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
