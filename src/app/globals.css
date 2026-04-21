@@ -6,55 +6,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Light Mode (fallback) */
-  --bg-primary: #FAF8F4;
-  --bg-secondary: #FFFFFF;
+  /* Light Mode - Clean White Theme */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F5;
   --bg-card: #FFFFFF;
-  --bg-navbar: rgba(255, 255, 255, 0.85);
-  --border-color: #E5E5E5;
+  --bg-navbar: rgba(255, 255, 255, 0.95);
+  --border-color: #E0E0E0;
   
-  /* Text colors - Light Mode */
-  --text-primary: #1A1A1A;
-  --text-secondary: #333333;
-  --text-muted: #777777;
-  --link-default: #C6A96B;
-  --link-hover: #B89555;
+  /* Text - Black */
+  --text-primary: #000000;
+  --text-secondary: #1A1A1A;
+  --text-muted: #666666;
   
-  /* Gold accent - consistent */
-  --gold-primary: #C6A96B;
-  --gold-hover: #D4B979;
-  --gold-highlight: #F5E6C8;
+  /* Gold accent */
+  --gold-primary: #B8860B;
+  --gold-hover: #DAA520;
+  --gold-highlight: #FFF8DC;
   
   /* Typography */
-  --font-serif: 'Playfair Display', 'Cinzel', Georgia, serif;
-  --font-sans: 'Inter', 'Poppins', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
   
-  /* Spacing */
+  /* Spacing & Transitions */
   --section-padding: clamp(4rem, 10vh, 8rem);
-  
-  /* Transitions */
   --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark Mode (Default for Luxury Perfume) */
+/* Dark Mode - Clean Black Theme */
 .dark {
-  --bg-primary: #0B0B0B;
-  --bg-secondary: #121212;
-  --bg-card: #1A1A1A;
-  --bg-navbar: rgba(10, 10, 10, 0.85);
+  --bg-primary: #000000;
+  --bg-secondary: #0A0A0A;
+  --bg-card: #111111;
+  --bg-navbar: rgba(0, 0, 0, 0.95);
   --border-color: #2A2A2A;
   
-  /* Text colors - Dark Mode */
-  --text-primary: #F8F8F8;
-  --text-secondary: #E0E0E0;
-  --text-muted: #8A8A8A;
-  --link-default: #C6A96B;
-  --link-hover: #E5D3A3;
+  /* Text - White */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E5E5;
+  --text-muted: #999999;
   
-  /* Gold accent - consistent */
-  --gold-primary: #C6A96B;
-  --gold-hover: #D4B979;
-  --gold-highlight: #E5D3A3;
+  /* Gold accent */
+  --gold-primary: #DAA520;
+  --gold-hover: #FFD700;
+  --gold-highlight: #B8860B;
 }
 
 /* Base styles */
