@@ -75,7 +75,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
           <div className="flex-1 overflow-y-auto overscroll-contain">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Left: Product Image */}
-              <div className="relative h-64 md:h-[500px] bg-black">
+              <div className="relative h-64 md:h-[500px] bg-transparent">
                 <img
                   src={product.images[0]}
                   alt={product.name}

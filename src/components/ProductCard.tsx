@@ -60,7 +60,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     >
       <div className="overflow-hidden rounded-3xl">
         {/* Image Container */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-bgCard">
+        <div className="relative aspect-[4/3] overflow-hidden bg-transparent">
           {/* Skeleton loader */}
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 skeleton rounded-t-3xl" />
