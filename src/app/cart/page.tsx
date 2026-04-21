@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { formatPrice } from '@/lib/constants';
 import { WHATSAPP_BASE_URL } from '@/lib/constants';
 import Navigation from '@/components/Navigation';
@@ -11,6 +12,7 @@ import Footer from '@/components/Footer';
 export default function CartPage() {
   const router = useRouter();
   const { cart, clearCart, updateQuantity, removeFromCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
@@ -206,7 +208,13 @@ export default function CartPage() {
                   </div>
 
                   <button
-                    onClick={() => setShowCheckoutForm(true)}
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        alert('Please sign up or login to place an order');
+                        return;
+                      }
+                      setShowCheckoutForm(true);
+                    }}
                     className="w-full btn-primary flex items-center justify-center gap-2 mb-3"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

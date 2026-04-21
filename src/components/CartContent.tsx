@@ -32,6 +32,10 @@ export default function CartContent({ onClose }: CartContentProps) {
 
   const handleCheckout = () => {
     if (cart.items.length === 0) return;
+    if (!isAuthenticated) {
+      alert('Please sign up or login to place an order');
+      return;
+    }
     setShowCheckoutForm(true);
   };
 
