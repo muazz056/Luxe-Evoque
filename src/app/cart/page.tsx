@@ -210,7 +210,7 @@ export default function CartPage() {
                   <button
                     onClick={() => {
                       if (!isAuthenticated) {
-                        alert('Please sign up or login to place an order');
+                        router.push('/auth');
                         return;
                       }
                       setShowCheckoutForm(true);

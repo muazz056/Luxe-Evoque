@@ -49,7 +49,7 @@ export const PRODUCTS: Product[] = [
     ],
     categories: ['luxury', 'men'],
     subcategory: 'woody',
-    price: 2200,
+    price: 2000,
     volume: '50ml',
     concentration: 'Eau de Parfum',
     intensity: 'Strong',

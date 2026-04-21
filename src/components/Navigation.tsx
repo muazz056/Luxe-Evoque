@@ -7,15 +7,11 @@ import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { NAV_ITEMS } from '@/lib/constants';
 import CartModal from './CartModal';
-import LoginModal from './LoginModal';
-import SignupModal from './SignupModal';
 
 export default function Navigation() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
   const { theme, toggleTheme } = useTheme();
@@ -82,13 +78,11 @@ export default function Navigation() {
   };
 
   const handleLogin = () => {
-    setIsLoginModalOpen(true);
-    setIsSignupModalOpen(false);
+    router.push('/auth');
   };
 
-  const handleSignup = () => {
-    setIsSignupModalOpen(true);
-    setIsLoginModalOpen(false);
+const handleSignup = () => {
+    router.push('/auth');
   };
 
   const handleLogout = () => {
@@ -223,15 +217,20 @@ export default function Navigation() {
 
               {/* Auth Button (Mobile) */}
               {isAuthenticated && user ? (
-                <button
-                  onClick={handleLogout}
-                  className="p-2 text-text-primary hover:text-gold transition-colors"
-                  aria-label="Logout"
-                >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                </button>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-text-primary">
+                    {user.fullName.split(' ')[0]}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="p-2 text-text-primary hover:text-red-400 transition-colors"
+                    aria-label="Logout"
+                  >
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </button>
+                </div>
               ) : (
                 <button
                   onClick={handleLogin}
@@ -349,17 +348,6 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* Modals */}
-      <LoginModal 
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onSwitchToSignup={handleSignup}
-      />
-      <SignupModal 
-        isOpen={isSignupModalOpen}
-        onClose={() => setIsSignupModalOpen(false)}
-        onSwitchToLogin={handleLogin}
-      />
       <CartModal
         isOpen={isCartModalOpen}
         onClose={() => setIsCartModalOpen(false)}
