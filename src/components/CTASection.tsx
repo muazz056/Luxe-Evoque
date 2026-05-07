@@ -49,7 +49,7 @@ export default function CTASection() {
               View Collections
             </button>
 
-            <a href="https://wa.me/923297189301?text=Hello! I'm interested in your luxury perfumes."
+            <a href="https://wa.me/923060225476?text=Hello! I'm interested in your luxury perfumes."
               target="_blank" rel="noopener noreferrer"
               className="px-8 py-4 text-base font-semibold uppercase tracking-wider rounded-full transition-all hover:opacity-90"
               style={{ border: '1px solid var(--gold-primary)', color: 'var(--gold-primary)' }}>

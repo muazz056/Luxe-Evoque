@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatPrice } from '@/config/products';
-import { initiatePayment, generateIntegrityHash } from '@/lib/safepay';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
@@ -59,54 +58,13 @@ export default function CartPage() {
       message += `\n*Notes:* ${notes}\n`;
     }
 
-    const whatsappUrl = `https://wa.me/923297189301?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/923060225476?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
     setIsSubmitting(false);
     clearCart();
     setShowCheckoutForm(false);
     router.push('/');
-  };
-
-  const handleSafePayCheckout = async () => {
-    if (!customerName || !customerPhone || !deliveryAddress) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const orderId = `LE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
-      const result = await initiatePayment({
-        amount: cart.total,
-        description: 'Luxe Evoque Perfume Order',
-        orderId: orderId,
-        customerName: customerName,
-        customerEmail: user?.email || 'customer@email.com',
-        customerPhone: customerPhone,
-      });
-
-      if (result.success && result.redirectUrl) {
-        // Open SafePay payment page in new tab
-        window.open(result.redirectUrl, '_blank');
-        
-        alert('You will be redirected to SafePay for payment. After payment, you will receive confirmation.');
-        
-        // Clear cart and redirect to home
-        clearCart();
-        setShowCheckoutForm(false);
-        router.push('/');
-      } else {
-        alert(result.message || 'Payment failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment error. Please try again or use WhatsApp checkout.');
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const handleContinueShopping = () => {
@@ -243,13 +201,12 @@ export default function CartPage() {
 
                   <p className="text-center text-xs mb-3" style={{ color: 'var(--text-muted)' }}>- OR -</p>
 
-                  <button disabled={isSubmitting}
-                    className="w-full py-4 rounded-full font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+                  <button disabled={true}
+                    className="w-full py-4 rounded-full font-semibold flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
                     style={{ backgroundColor: '#8B0000', color: '#FFF' }}
-                    onClick={handleSafePayCheckout}
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.51c-.46-.76-1.87-1.8-3.65-1.94-1.64.13-2.95.8-3.86 1.55-.71.58-1.22 1.43-1.49 2.51-.27.97-.08 1.79.05 2.46.13.66.47 1.09.94 1.46.47.37.99.68 1.54.86.55.18 1.42.27 2.02.18s1.28-.29 1.74-.72c.46-.43.79-1.02.97-1.77l.02-.02c.45.18 1.02.35 1.74.45 1.3.18 2.79-.33 3.88-1.51z"/></svg>
-                    Pay with Card (SafePay)
+                    Not Available right Now!
                   </button>
 
                   <button onClick={() => setShowCheckoutForm(false)}

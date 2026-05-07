@@ -1,5 +1,5 @@
 // WhatsApp configuration
-export const WHATSAPP_NUMBER = '923297189301';
+export const WHATSAPP_NUMBER = '923060225476';
 export const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 // Perfume categories
